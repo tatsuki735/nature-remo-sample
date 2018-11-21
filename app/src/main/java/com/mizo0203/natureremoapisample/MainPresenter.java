@@ -21,9 +21,10 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mizo0203.natureremoapisample.data.Appliance;
+import com.mizo0203.natureremoapisample.data.IRSignal;
 import com.mizo0203.natureremoapisample.data.Signal;
 import com.mizo0203.natureremoapisample.data.UserInformation;
-import com.mizo0203.natureremoapisample.data.source.NatureApiDataSource;
+import com.mizo0203.natureremoapisample.data.source.NatureRemoRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -35,14 +36,16 @@ public class MainPresenter implements MainContract.Presenter {
 
     private static final String TAG = "MainPresenter";
 
-    private final NatureApiDataSource mTasksRepository;
+    private final NatureRemoRepository mNatureRemoRepository;
 
-    private final MainContract.View mTasksView;
+    private final MainContract.View mMainView;
 
-    public MainPresenter(@NonNull NatureApiDataSource tasksRepository, @NonNull MainContract.View tasksView) {
-        mTasksRepository = checkNotNull(tasksRepository, "tasksRepository cannot be null");
-        mTasksView = checkNotNull(tasksView, "tasksView cannot be null!");
-        mTasksView.setPresenter(this);
+    private IRSignal mIRSignalMessage = null;
+
+    public MainPresenter(@NonNull NatureRemoRepository natureRemoRepository, @NonNull MainContract.View mainView) {
+        mNatureRemoRepository = checkNotNull(natureRemoRepository, "natureRemoRepository cannot be null");
+        mMainView = checkNotNull(mainView, "mainView cannot be null!");
+        mMainView.setPresenter(this);
 
         HandlerThread handlerThread = new HandlerThread("MainPresenter");
         handlerThread.start();
@@ -55,34 +58,34 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void result(int requestCode, int resultCode) {
         // If a task was successfully added, show snackbar
-        mTasksView.showSuccess();
+        mMainView.showSuccess();
     }
 
     @Override
     public void sendButtonEvent(ButtonType buttonType) {
         switch (buttonType) {
             case NUM_1:
-                mTasksRepository.getUsersMe(new NatureApiDataSource.Callback<UserInformation>() {
+                mNatureRemoRepository.getUsersMe(new NatureRemoRepository.Callback<UserInformation>() {
                     @Override
                     public void success(UserInformation userInfo) {
                         Log.d(TAG, "userInfo.id: \t" + userInfo.id);
                         Log.d(TAG, "userInfo.nickname: \t" + userInfo.nickname);
-                        if (mTasksView.isActive()) {
-                            mTasksView.showSuccess();
+                        if (mMainView.isActive()) {
+                            mMainView.showSuccess();
                         }
                     }
 
                     @Override
                     public void failure() {
                         // The view may not be able to handle UI updates anymore
-                        if (mTasksView.isActive()) {
-                            mTasksView.showFailure();
+                        if (mMainView.isActive()) {
+                            mMainView.showFailure();
                         }
                     }
                 });
                 break;
             case NUM_2:
-                mTasksRepository.getAppliances(new NatureApiDataSource.Callback<Appliance[]>() {
+                mNatureRemoRepository.getAppliances(new NatureRemoRepository.Callback<Appliance[]>() {
                     @Override
                     public void success(Appliance[] appliances) {
                         Log.d(TAG, "appliances.length: \t" + appliances.length);
@@ -90,25 +93,25 @@ public class MainPresenter implements MainContract.Presenter {
                             Log.d(TAG, "appliance.nickname: \t" + appliance.nickname);
                             Log.d(TAG, "appliance.id: \t" + appliance.id);
                         }
-                        if (mTasksView.isActive()) {
-                            mTasksView.showFailure();
+                        if (mMainView.isActive()) {
+                            mMainView.showFailure();
                         }
                     }
 
                     @Override
                     public void failure() {
                         // The view may not be able to handle UI updates anymore
-                        if (!mTasksView.isActive()) {
+                        if (!mMainView.isActive()) {
                             return;
                         }
-                        if (mTasksView.isActive()) {
-                            mTasksView.showFailure();
+                        if (mMainView.isActive()) {
+                            mMainView.showFailure();
                         }
                     }
                 });
                 break;
             case NUM_3:
-                mTasksRepository.getSignalsAppliance(MainActivity.APPLIANCE_ID, new NatureApiDataSource.Callback<Signal[]>() {
+                mNatureRemoRepository.getSignalsAppliance(MainActivity.APPLIANCE_ID, new NatureRemoRepository.Callback<Signal[]>() {
                     @Override
                     public void success(Signal[] signals) {
                         Log.d(TAG, "signals.length: \t" + signals.length);
@@ -116,22 +119,22 @@ public class MainPresenter implements MainContract.Presenter {
                             Log.d(TAG, "signal.name: \t" + signal.name);
                             Log.d(TAG, "signal.id: \t" + signal.id);
                         }
-                        if (mTasksView.isActive()) {
-                            mTasksView.showSuccess();
+                        if (mMainView.isActive()) {
+                            mMainView.showSuccess();
                         }
                     }
 
                     @Override
                     public void failure() {
                         // The view may not be able to handle UI updates anymore
-                        if (mTasksView.isActive()) {
-                            mTasksView.showFailure();
+                        if (mMainView.isActive()) {
+                            mMainView.showFailure();
                         }
                     }
                 });
                 break;
             case NUM_4:
-                mTasksRepository.getSignalsAppliance(MainActivity.APPLIANCE_ID, new NatureApiDataSource.Callback<Signal[]>() {
+                mNatureRemoRepository.getSignalsAppliance(MainActivity.APPLIANCE_ID, new NatureRemoRepository.Callback<Signal[]>() {
                     @Override
                     public void success(Signal[] signals) {
                         Log.d(TAG, "signals.length: \t" + signals.length);
@@ -139,35 +142,79 @@ public class MainPresenter implements MainContract.Presenter {
                             Log.d(TAG, "signal.name: \t" + signal.name);
                             Log.d(TAG, "signal.id: \t" + signal.id);
                         }
-                        if (mTasksView.isActive()) {
-                            mTasksView.showSuccess();
+                        if (mMainView.isActive()) {
+                            mMainView.showSuccess();
                         }
                     }
 
                     @Override
                     public void failure() {
                         // The view may not be able to handle UI updates anymore
-                        if (mTasksView.isActive()) {
-                            mTasksView.showFailure();
+                        if (mMainView.isActive()) {
+                            mMainView.showFailure();
                         }
                     }
                 });
                 break;
             case NUM_5:
-                mTasksRepository.postSendSignal(MainActivity.SIGNAL_ID, new NatureApiDataSource.Callback<Void>() {
+                mNatureRemoRepository.postSendSignal(MainActivity.SIGNAL_ID, new NatureRemoRepository.Callback<Void>() {
                     @Override
                     public void success(Void signals) {
                         Log.d(TAG, "postSendSignal");
-                        if (mTasksView.isActive()) {
-                            mTasksView.showSuccess();
+                        if (mMainView.isActive()) {
+                            mMainView.showSuccess();
                         }
                     }
 
                     @Override
                     public void failure() {
                         // The view may not be able to handle UI updates anymore
-                        if (mTasksView.isActive()) {
-                            mTasksView.showFailure();
+                        if (mMainView.isActive()) {
+                            mMainView.showFailure();
+                        }
+                    }
+                });
+                break;
+            case NUM_6:
+                mNatureRemoRepository.getMessages(new NatureRemoRepository.Callback<IRSignal>() {
+                    @Override
+                    public void success(IRSignal message) {
+                        Log.d(TAG, "getMessages");
+                        mIRSignalMessage = message;
+                        if (mMainView.isActive()) {
+                            mMainView.showSuccess();
+                        }
+                    }
+
+                    @Override
+                    public void failure() {
+                        // The view may not be able to handle UI updates anymore
+                        if (mMainView.isActive()) {
+                            mMainView.showFailure();
+                        }
+                    }
+                });
+                break;
+            case NUM_7:
+                if (mIRSignalMessage == null) {
+                    Log.e(TAG, "Press the 6 button");
+                    mMainView.showFailure();
+                    break;
+                }
+                mNatureRemoRepository.postMessages(mIRSignalMessage, new NatureRemoRepository.Callback<Void>() {
+                    @Override
+                    public void success(Void signals) {
+                        Log.d(TAG, "postMessages");
+                        if (mMainView.isActive()) {
+                            mMainView.showSuccess();
+                        }
+                    }
+
+                    @Override
+                    public void failure() {
+                        // The view may not be able to handle UI updates anymore
+                        if (mMainView.isActive()) {
+                            mMainView.showFailure();
                         }
                     }
                 });

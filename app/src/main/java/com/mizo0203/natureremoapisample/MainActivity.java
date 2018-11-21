@@ -27,10 +27,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View, View.OnClickListener {
 
-    // TODO: TOKEN, APPLIANCE_ID, SIGNAL_ID をセット
-    private static final String TOKEN = "";
     public static final String APPLIANCE_ID = "";
     public static final String SIGNAL_ID = "";
+
+    // TODO: TOKEN, APPLIANCE_ID, SIGNAL_ID をセット
+    private static final String TOKEN = "";
+
+    // TODO: NATURE_REMO_IP_ADDRESS をセット
+    private static final String NATURE_REMO_IP_ADDRESS = "xxx.xxx.xxx.xxx";
+
     private MainContract.Presenter mPresenter;
 
     private boolean mActive = false;
@@ -54,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         findViewById(R.id.button_12).setOnClickListener(this);
 
         // Create the presenter
-        mPresenter = new MainPresenter(Injection.provideTasksRepository(getApplicationContext(), TOKEN), this);
+        mPresenter = new MainPresenter(Injection.provideNatureRemoRepository(TOKEN, NATURE_REMO_IP_ADDRESS), this);
     }
 
     @Override

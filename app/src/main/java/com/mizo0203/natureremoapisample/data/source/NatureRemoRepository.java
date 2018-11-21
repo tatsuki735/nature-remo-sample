@@ -19,29 +19,51 @@ package com.mizo0203.natureremoapisample.data.source;
 import android.support.annotation.NonNull;
 
 import com.mizo0203.natureremoapisample.data.Appliance;
+import com.mizo0203.natureremoapisample.data.IRSignal;
 import com.mizo0203.natureremoapisample.data.Signal;
 import com.mizo0203.natureremoapisample.data.UserInformation;
 import com.mizo0203.natureremoapisample.util.AppExecutors;
 
-public class NatureApiDataSource {
+public class NatureRemoRepository {
 
-    private static volatile NatureApiDataSource INSTANCE;
+    private static volatile NatureRemoRepository INSTANCE;
 
-    private NatureApiClient mClient;
+    /**
+     * Cloud API クライアント
+     * <p>
+     * Cloud API: Nature Remo クラウドがインターネットに向けて提供する API
+     * http://swagger.nature.global/
+     */
+    private final NatureApiClient mCloudApiClient;
+
+    /**
+     * Local API クライアント
+     * <p>
+     * Local API: Nature Remo デバイスがローカルネットワークに提供するローカルの API
+     * http://local.swagger.nature.global/
+     */
+    private final NatureRemoLocalApiClient mLocalApiClient;
 
     private AppExecutors mAppExecutors;
 
     // Prevent direct instantiation.
-    private NatureApiDataSource(@NonNull AppExecutors appExecutors, @NonNull NatureApiClient client) {
+    private NatureRemoRepository(@NonNull AppExecutors appExecutors, @NonNull NatureApiClient cloudApiClient, @NonNull NatureRemoLocalApiClient localApiClient) {
         mAppExecutors = appExecutors;
-        mClient = client;
+        mCloudApiClient = cloudApiClient;
+        mLocalApiClient = localApiClient;
     }
 
-    public static NatureApiDataSource getInstance(@NonNull AppExecutors appExecutors, @NonNull NatureApiClient client) {
+    /**
+     * @param cloudApiClient Cloud API クライアント
+     *                       Cloud API: Nature Remo クラウドがインターネットに向けて提供する API
+     * @param localApiClient Local API クライアント
+     *                       Local API: Nature Remo デバイスがローカルネットワークに提供するローカルの API
+     */
+    public static NatureRemoRepository getInstance(@NonNull AppExecutors appExecutors, @NonNull NatureApiClient cloudApiClient, @NonNull NatureRemoLocalApiClient localApiClient) {
         if (INSTANCE == null) {
-            synchronized (NatureApiDataSource.class) {
+            synchronized (NatureRemoRepository.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new NatureApiDataSource(appExecutors, client);
+                    INSTANCE = new NatureRemoRepository(appExecutors, cloudApiClient, localApiClient);
                 }
             }
         }
@@ -52,7 +74,7 @@ public class NatureApiDataSource {
         Runnable deleteRunnable = new Runnable() {
             @Override
             public void run() {
-                final UserInformation userInfo = mClient.getUsersMe();
+                final UserInformation userInfo = mCloudApiClient.getUsersMe();
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -73,7 +95,7 @@ public class NatureApiDataSource {
         Runnable deleteRunnable = new Runnable() {
             @Override
             public void run() {
-                final Appliance[] appliances = mClient.getAppliances();
+                final Appliance[] appliances = mCloudApiClient.getAppliances();
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -94,7 +116,7 @@ public class NatureApiDataSource {
         Runnable deleteRunnable = new Runnable() {
             @Override
             public void run() {
-                final Signal[] appliances = mClient.getSignalsAppliance(appliance);
+                final Signal[] appliances = mCloudApiClient.getSignalsAppliance(appliance);
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -115,7 +137,7 @@ public class NatureApiDataSource {
         Runnable deleteRunnable = new Runnable() {
             @Override
             public void run() {
-                mClient.postSendSignal(signal);
+                mCloudApiClient.postSendSignal(signal);
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -128,9 +150,51 @@ public class NatureApiDataSource {
         mAppExecutors.networkIO().execute(deleteRunnable);
     }
 
+    public void getMessages(@NonNull final Callback<IRSignal> callback) {
+        Runnable deleteRunnable = new Runnable() {
+            @Override
+            public void run() {
+                final IRSignal message = mLocalApiClient.getMessages();
+                mAppExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (message != null) {
+                            callback.success(message);
+                        } else {
+                            callback.failure();
+                        }
+                    }
+                });
+            }
+        };
+
+        mAppExecutors.networkIO().execute(deleteRunnable);
+    }
+
+    public void postMessages(@NonNull final IRSignal message, @NonNull final Callback<Void> callback) {
+        Runnable deleteRunnable = new Runnable() {
+            @Override
+            public void run() {
+                final boolean success = mLocalApiClient.postMessages(message);
+                mAppExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (success) {
+                            callback.success(null);
+                        } else {
+                            callback.failure();
+                        }
+                    }
+                });
+            }
+        };
+
+        mAppExecutors.networkIO().execute(deleteRunnable);
+    }
+
     public interface Callback<T> {
 
-        void success(T userInfo);
+        void success(T responses);
 
         void failure();
     }

@@ -40,12 +40,9 @@ public class NatureApiClient {
     private static final String USERS_ME_STR = "/1/users/me";
     private static final String APPLIANCES_STR = "/1/appliances";
 
-    //    private final LineBotCallbackRequestParser mLineBotCallbackRequestParser;
     private final String mChannelAccessToken;
 
     public NatureApiClient(String token) {
-//        mLineBotCallbackRequestParser =
-//                new LineBotCallbackRequestParser(new LineSignatureValidator(channelSecret.getBytes()));
         mChannelAccessToken = token;
     }
 

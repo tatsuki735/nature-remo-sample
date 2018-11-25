@@ -23,18 +23,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mizo0203.natureremoapisample.panasonic.tv.RemoteControlButtonType;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View, View.OnClickListener {
 
-    public static final String APPLIANCE_ID = "";
-    public static final String SIGNAL_ID = "";
-
-    // TODO: TOKEN, APPLIANCE_ID, SIGNAL_ID をセット
+    // TODO: (optional) Nature API を使用する場合は TOKEN をセット
     private static final String TOKEN = "";
 
     // TODO: NATURE_REMO_IP_ADDRESS をセット
-    private static final String NATURE_REMO_IP_ADDRESS = "xxx.xxx.xxx.xxx";
+    private static final String NATURE_REMO_IP_ADDRESS = "192.168.1.23";
 
     private MainContract.Presenter mPresenter;
 
@@ -104,40 +103,40 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_1:
-                mPresenter.sendButtonEvent(ButtonType.NUM_1);
+                mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_1);
                 break;
             case R.id.button_2:
-                mPresenter.sendButtonEvent(ButtonType.NUM_2);
+                mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_2);
                 break;
             case R.id.button_3:
-                mPresenter.sendButtonEvent(ButtonType.NUM_3);
+                mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_3);
                 break;
             case R.id.button_4:
-                mPresenter.sendButtonEvent(ButtonType.NUM_4);
+                mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_4);
                 break;
             case R.id.button_5:
-                mPresenter.sendButtonEvent(ButtonType.NUM_5);
+                mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_5);
                 break;
             case R.id.button_6:
-                mPresenter.sendButtonEvent(ButtonType.NUM_6);
+                mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_6);
                 break;
             case R.id.button_7:
-                mPresenter.sendButtonEvent(ButtonType.NUM_7);
+                mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_7);
                 break;
             case R.id.button_8:
-                mPresenter.sendButtonEvent(ButtonType.NUM_8);
+                mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_8);
                 break;
             case R.id.button_9:
-                mPresenter.sendButtonEvent(ButtonType.NUM_9);
+                mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_9);
                 break;
             case R.id.button_10:
-                mPresenter.sendButtonEvent(ButtonType.NUM_10);
+                mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_10);
                 break;
             case R.id.button_11:
-                mPresenter.sendButtonEvent(ButtonType.NUM_11);
+                mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_11);
                 break;
             case R.id.button_12:
-                mPresenter.sendButtonEvent(ButtonType.NUM_12);
+                mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_12);
                 break;
         }
     }

@@ -16,6 +16,10 @@
 
 package com.mizo0203.natureremoapisample;
 
+import android.support.annotation.NonNull;
+
+import com.mizo0203.natureremoapisample.data.IRSignal;
+
 /**
  * This specifies the contract between the view and the presenter.
  */
@@ -34,6 +38,6 @@ public interface MainContract {
 
         void result(int requestCode, int resultCode);
 
-        void sendButtonEvent(ButtonType buttonType);
+        void sendButtonEvent(@NonNull IRSignal irSignalMessage);
     }
 }

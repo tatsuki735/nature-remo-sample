@@ -18,12 +18,11 @@ package com.mizo0203.natureremoapisample;
 
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.mizo0203.natureremoapisample.data.IRSignal;
 import com.mizo0203.natureremoapisample.data.source.NatureRemoRepository;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Listens to user actions from the UI ({@link MainActivity}), retrieves the data and updates the
@@ -38,8 +37,10 @@ public class MainPresenter {
     private final MainActivity mMainView;
 
     public MainPresenter(@NonNull NatureRemoRepository natureRemoRepository, @NonNull MainActivity mainView) {
-        mNatureRemoRepository = checkNotNull(natureRemoRepository, "natureRemoRepository cannot be null");
-        mMainView = checkNotNull(mainView, "mainView cannot be null!");
+        checkNotNull(natureRemoRepository, "natureRemoRepository cannot be null");
+        mNatureRemoRepository = natureRemoRepository;
+        checkNotNull(mainView, "mainView cannot be null!");
+        mMainView = mainView;
         mMainView.setPresenter(this);
 
         HandlerThread handlerThread = new HandlerThread("MainPresenter");
@@ -64,5 +65,19 @@ public class MainPresenter {
                 }
             }
         });
+    }
+
+    /**
+     * Ensures that an object reference passed as a parameter to the calling method is not null.
+     *
+     * @param reference    an object reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *                     string using {@link String#valueOf(Object)}
+     * @throws NullPointerException if {@code reference} is null
+     */
+    private void checkNotNull(Object reference, @Nullable String errorMessage) {
+        if (reference == null) {
+            throw new NullPointerException(errorMessage);
+        }
     }
 }

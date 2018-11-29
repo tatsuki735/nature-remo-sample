@@ -18,13 +18,12 @@ package com.mizo0203.natureremoapisample;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
 import com.mizo0203.natureremoapisample.panasonic.tv.RemoteControlButtonType;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -73,7 +72,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void setPresenter(@NonNull MainPresenter presenter) {
-        mPresenter = checkNotNull(presenter);
+        checkNotNull(presenter, "presenter cannot be null");
+        mPresenter = presenter;
     }
 
     public void showSuccess() {
@@ -127,6 +127,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.button_12:
                 mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_12);
                 break;
+        }
+    }
+
+    /**
+     * Ensures that an object reference passed as a parameter to the calling method is not null.
+     *
+     * @param reference    an object reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *                     string using {@link String#valueOf(Object)}
+     * @throws NullPointerException if {@code reference} is null
+     */
+    private void checkNotNull(Object reference, @Nullable String errorMessage) {
+        if (reference == null) {
+            throw new NullPointerException(errorMessage);
         }
     }
 }

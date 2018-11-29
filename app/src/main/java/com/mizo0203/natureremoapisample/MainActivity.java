@@ -16,7 +16,6 @@
 
 package com.mizo0203.natureremoapisample;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +26,7 @@ import com.mizo0203.natureremoapisample.panasonic.tv.RemoteControlButtonType;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     // TODO: (optional) Nature API を使用する場合は TOKEN をセット
     private static final String TOKEN = "";
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     // TODO: NATURE_REMO_IP_ADDRESS をセット
     private static final String NATURE_REMO_IP_ADDRESS = "192.168.1.23";
 
-    private MainContract.Presenter mPresenter;
+    private MainPresenter mPresenter;
 
     private boolean mActive = false;
 
@@ -64,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.start();
         mActive = true;
     }
 
@@ -74,27 +72,18 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         mActive = false;
     }
 
-    @Override
-    public void setPresenter(@NonNull MainContract.Presenter presenter) {
+    public void setPresenter(@NonNull MainPresenter presenter) {
         mPresenter = checkNotNull(presenter);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mPresenter.result(requestCode, resultCode);
-    }
-
-    @Override
     public void showSuccess() {
         Toast.makeText(getApplicationContext(), R.string.success, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
     public void showFailure() {
         Toast.makeText(getApplicationContext(), R.string.failure, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
     public boolean isActive() {
         return mActive;
     }

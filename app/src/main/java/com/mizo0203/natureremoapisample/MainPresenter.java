@@ -29,15 +29,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Listens to user actions from the UI ({@link MainActivity}), retrieves the data and updates the
  * UI as required.
  */
-public class MainPresenter implements MainContract.Presenter {
+public class MainPresenter {
 
     private static final String TAG = "MainPresenter";
 
     private final NatureRemoRepository mNatureRemoRepository;
 
-    private final MainContract.View mMainView;
+    private final MainActivity mMainView;
 
-    public MainPresenter(@NonNull NatureRemoRepository natureRemoRepository, @NonNull MainContract.View mainView) {
+    public MainPresenter(@NonNull NatureRemoRepository natureRemoRepository, @NonNull MainActivity mainView) {
         mNatureRemoRepository = checkNotNull(natureRemoRepository, "natureRemoRepository cannot be null");
         mMainView = checkNotNull(mainView, "mainView cannot be null!");
         mMainView.setPresenter(this);
@@ -46,17 +46,6 @@ public class MainPresenter implements MainContract.Presenter {
         handlerThread.start();
     }
 
-    @Override
-    public void start() {
-    }
-
-    @Override
-    public void result(int requestCode, int resultCode) {
-        // If a task was successfully added, show snackbar
-        mMainView.showSuccess();
-    }
-
-    @Override
     public void sendButtonEvent(@NonNull IRSignal irSignalMessage) {
         mNatureRemoRepository.postMessages(irSignalMessage, new NatureRemoRepository.Callback<Void>() {
             @Override

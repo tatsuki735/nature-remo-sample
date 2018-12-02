@@ -151,43 +151,33 @@ public class NatureRemoRepository {
     }
 
     public void getMessages(@NonNull final Callback<IRSignal> callback) {
-        Runnable deleteRunnable = new Runnable() {
+        Runnable deleteRunnable = () -> mLocalApiClient.getMessages(new Callback<IRSignal>() {
             @Override
-            public void run() {
-                final IRSignal message = mLocalApiClient.getMessages();
-                mAppExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (message != null) {
-                            callback.success(message);
-                        } else {
-                            callback.failure();
-                        }
-                    }
-                });
+            public void success(IRSignal message) {
+                mAppExecutors.mainThread().execute(() -> callback.success(message));
             }
-        };
+
+            @Override
+            public void failure() {
+                mAppExecutors.mainThread().execute(callback::failure);
+            }
+        });
 
         mAppExecutors.networkIO().execute(deleteRunnable);
     }
 
     public void postMessages(@NonNull final IRSignal message, @NonNull final Callback<Void> callback) {
-        Runnable deleteRunnable = new Runnable() {
+        Runnable deleteRunnable = () -> mLocalApiClient.postMessages(message, new Callback<Void>() {
             @Override
-            public void run() {
-                final boolean success = mLocalApiClient.postMessages(message);
-                mAppExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (success) {
-                            callback.success(null);
-                        } else {
-                            callback.failure();
-                        }
-                    }
-                });
+            public void success(Void v) {
+                mAppExecutors.mainThread().execute(() -> callback.success(v));
             }
-        };
+
+            @Override
+            public void failure() {
+                mAppExecutors.mainThread().execute(callback::failure);
+            }
+        });
 
         mAppExecutors.networkIO().execute(deleteRunnable);
     }

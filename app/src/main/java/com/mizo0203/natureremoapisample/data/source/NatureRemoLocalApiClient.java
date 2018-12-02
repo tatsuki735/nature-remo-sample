@@ -18,15 +18,27 @@ package com.mizo0203.natureremoapisample.data.source;
 
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.mizo0203.natureremoapisample.data.IRSignal;
-import com.mizo0203.natureremoapisample.util.HttpUtils;
-import com.mizo0203.natureremoapisample.util.JsonUtils;
 
-import java.io.IOException;
-import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Dispatcher;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.HeaderMap;
+import retrofit2.http.POST;
 
 /**
  * Nature Remo Local API v1.0.0
@@ -43,20 +55,48 @@ import java.util.Map;
  * http://local.swagger.nature.global/
  */
 public class NatureRemoLocalApiClient {
-
-    private static final String PROTOCOL_HTTP_STR = "http";
-    private static final String MESSAGES_STR = "/messages";
+    private static final String TAG = NatureRemoLocalApiClient.class.getSimpleName();
+    private static final String X_REQUESTED_WITH = NatureRemoLocalApiClient.class.getSimpleName();
+    private final Map<String, String> mHeaders;
 
     /**
-     * Nature Remo の IP アドレス
+     * Retrofit 用 Nature Remo Local API 定義インターフェイス
      */
-    private final String mRemoIpAddress;
+    private NatureRemoLocalApiService mNatureRemoLocalApiService;
 
     /**
      * @param remoIpAddress Nature Remo の IP アドレス
      */
     public NatureRemoLocalApiClient(@NonNull String remoIpAddress) {
-        mRemoIpAddress = remoIpAddress;
+        HttpUrl httpUrl = new HttpUrl.Builder()
+                .scheme("http")
+                .host(remoIpAddress)
+                .build();
+
+        Dispatcher dispatcher = new Dispatcher();
+        dispatcher.setMaxRequestsPerHost(1);
+
+        OkHttpClient localHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .callTimeout(30, TimeUnit.SECONDS)
+                .dispatcher(dispatcher)
+                .build();
+
+        // Add X-Requested-With header to every request to Nature Remo Local API
+        mHeaders = Collections.unmodifiableMap(new HashMap<String, String>() {
+            {
+                put("X-Requested-With", X_REQUESTED_WITH);
+                put("Content-Type", "application/json");
+            }
+        });
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(localHttpClient)
+                .baseUrl(httpUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        mNatureRemoLocalApiService = retrofit.create(NatureRemoLocalApiService.class);
     }
 
     /**
@@ -64,20 +104,26 @@ public class NatureRemoLocalApiClient {
      * <p>
      * Fetch the newest received IR signal
      *
-     * @return IR信号 / IR signal
+     * @param callback IR信号 / IR signal
      */
-    /*package*/ IRSignal getMessages() {
-        try {
-            final URL url = new URL(PROTOCOL_HTTP_STR, mRemoIpAddress, MESSAGES_STR);
-            final Map<String, String> reqProp = new HashMap<>();
-            reqProp.put("Content-Type", "application/json");
-            reqProp.put("X-Requested-With", "");
-            String json = HttpUtils.get(url, reqProp);
-            return JsonUtils.fromJson(json, IRSignal.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+    /*package*/ void getMessages(@NonNull final NatureRemoRepository.Callback<IRSignal> callback) {
+        mNatureRemoLocalApiService.getMessages(mHeaders).enqueue(new Callback<IRSignal>() {
+            @Override
+            public void onResponse(@NonNull Call<IRSignal> call, @NonNull Response<IRSignal> response) {
+                if (response.isSuccessful()) {
+                    callback.success(response.body());
+                } else {
+                    Log.e(TAG, "getMessages failure: message=" + response.message() + " code=" + response.code());
+                    callback.failure();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<IRSignal> call, @NonNull Throwable t) {
+                Log.e(TAG, "getMessages failure", t);
+                callback.failure();
+            }
+        });
     }
 
     /**
@@ -85,26 +131,42 @@ public class NatureRemoLocalApiClient {
      * <p>
      * Emit IR signals provided by request body
      *
-     * @param message 赤外線信号を記述する JSON シリアライズオブジェクト。
-     *                "data"、 "freq"、 "format" キーが含まれています。
-     *                <p>
-     *                JSON serialized object describing infrared signals.
-     *                Includes "data", “freq” and “format” keys.
-     * @return 正常に送信されました / Successfully sent
+     * @param message  赤外線信号を記述する JSON シリアライズオブジェクト。
+     *                 "data"、 "freq"、 "format" キーが含まれています。
+     *                 <p>
+     *                 JSON serialized object describing infrared signals.
+     *                 Includes "data", “freq” and “format” keys.
+     * @param callback 正常に送信されました / Successfully sent
      */
-    /*package*/ boolean postMessages(@NonNull IRSignal message) {
-        try {
-            final URL url = new URL(PROTOCOL_HTTP_STR, mRemoIpAddress, MESSAGES_STR);
-            final Map<String, String> reqProp = new HashMap<>();
-            reqProp.put("Content-Type", "application/json");
-            reqProp.put("X-Requested-With", "");
-            final String body = JsonUtils.toJson(message);
-            HttpUtils.post(url, reqProp, body);
-            return true; // FIXME: Check HTTP status code is equal to 200
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+    /*package*/ void postMessages(@NonNull IRSignal message, @NonNull final NatureRemoRepository.Callback<Void> callback) {
+        mNatureRemoLocalApiService.postMessages(mHeaders, message).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if (response.isSuccessful()) {
+                    callback.success(response.body());
+                } else {
+                    Log.e(TAG, "postMessages failure: message=" + response.message() + " code=" + response.code());
+                    callback.failure();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.e(TAG, "postMessages failure", t);
+                callback.failure();
+            }
+        });
     }
 
+    /**
+     * Retrofit 用 Nature Remo Local API 定義インターフェイス
+     */
+    private interface NatureRemoLocalApiService {
+
+        @GET("/messages")
+        Call<IRSignal> getMessages(@HeaderMap Map<String, String> headers);
+
+        @POST("/messages")
+        Call<Void> postMessages(@HeaderMap Map<String, String> headers, @Body IRSignal message);
+    }
 }

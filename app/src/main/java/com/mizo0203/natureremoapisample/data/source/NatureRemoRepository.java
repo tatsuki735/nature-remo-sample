@@ -154,15 +154,25 @@ public class NatureRemoRepository {
         Runnable deleteRunnable = new Runnable() {
             @Override
             public void run() {
-                final IRSignal message = mLocalApiClient.getMessages();
-                mAppExecutors.mainThread().execute(new Runnable() {
+                mLocalApiClient.getMessages(new Callback<IRSignal>() {
                     @Override
-                    public void run() {
-                        if (message != null) {
+                    public void success(final IRSignal message) {
+                        mAppExecutors.mainThread().execute(new Runnable() {
+                            @Override
+                            public void run() {
                             callback.success(message);
-                        } else {
-                            callback.failure();
-                        }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void failure() {
+                        mAppExecutors.mainThread().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.failure();
+                            }
+                        });
                     }
                 });
             }
@@ -175,15 +185,25 @@ public class NatureRemoRepository {
         Runnable deleteRunnable = new Runnable() {
             @Override
             public void run() {
-                final boolean success = mLocalApiClient.postMessages(message);
-                mAppExecutors.mainThread().execute(new Runnable() {
+                mLocalApiClient.postMessages(message, new Callback<Void>() {
                     @Override
-                    public void run() {
-                        if (success) {
-                            callback.success(null);
-                        } else {
-                            callback.failure();
-                        }
+                    public void success(final Void v) {
+                        mAppExecutors.mainThread().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.success(v);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void failure() {
+                        mAppExecutors.mainThread().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.failure();
+                            }
+                        });
                     }
                 });
             }

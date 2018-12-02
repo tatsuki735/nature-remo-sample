@@ -107,23 +107,7 @@ public class NatureRemoLocalApiClient {
      * @param callback IR信号 / IR signal
      */
     /*package*/ void getMessages(@NonNull final NatureRemoRepository.Callback<IRSignal> callback) {
-        mNatureRemoLocalApiService.getMessages(mHeaders).enqueue(new Callback<IRSignal>() {
-            @Override
-            public void onResponse(@NonNull Call<IRSignal> call, @NonNull Response<IRSignal> response) {
-                if (response.isSuccessful()) {
-                    callback.success(response.body());
-                } else {
-                    Log.e(TAG, "getMessages failure: message=" + response.message() + " code=" + response.code());
-                    callback.failure();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<IRSignal> call, @NonNull Throwable t) {
-                Log.e(TAG, "getMessages failure", t);
-                callback.failure();
-            }
-        });
+        mNatureRemoLocalApiService.getMessages(mHeaders).enqueue(createCallback(callback));
     }
 
     /**
@@ -139,23 +123,27 @@ public class NatureRemoLocalApiClient {
      * @param callback 正常に送信されました / Successfully sent
      */
     /*package*/ void postMessages(@NonNull IRSignal message, @NonNull final NatureRemoRepository.Callback<Void> callback) {
-        mNatureRemoLocalApiService.postMessages(mHeaders, message).enqueue(new Callback<Void>() {
+        mNatureRemoLocalApiService.postMessages(mHeaders, message).enqueue(createCallback(callback));
+    }
+
+    private <T> Callback<T> createCallback(final NatureRemoRepository.Callback<T> callback) {
+        return new Callback<T>() {
             @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+            public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
                 if (response.isSuccessful()) {
                     callback.success(response.body());
                 } else {
-                    Log.e(TAG, "postMessages failure: message=" + response.message() + " code=" + response.code());
+                    Log.e(TAG, "failure: message=" + response.message() + " code=" + response.code());
                     callback.failure();
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Log.e(TAG, "postMessages failure", t);
+            public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+                Log.e(TAG, "failure", t);
                 callback.failure();
             }
-        });
+        };
     }
 
     /**

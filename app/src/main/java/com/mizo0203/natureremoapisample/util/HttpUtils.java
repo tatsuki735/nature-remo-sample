@@ -27,7 +27,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.logging.Logger;
 
-// FIXME: HTTP Status Code
+/**
+ * FIXME: HTTP Status Code
+ *
+ * @deprecated Retrofit に置き換えを予定
+ */
 public class HttpUtils {
 
     private static final Logger LOG = Logger.getLogger(HttpUtils.class.getName());

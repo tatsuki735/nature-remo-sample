@@ -18,14 +18,10 @@ package com.mizo0203.natureremoapisample.util;
 
 import com.google.gson.Gson;
 
+/**
+ * @deprecated Retrofit に置き換えを予定
+ */
 public class JsonUtils {
-
-    /**
-     * @see Gson#toJson(Object)
-     */
-    public static String toJson(Object src) {
-        return new Gson().toJson(src);
-    }
 
     /**
      * @see Gson#fromJson(String, Class)

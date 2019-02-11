@@ -18,23 +18,12 @@ package com.mizo0203.natureremoapisample.data.source;
 
 import android.support.annotation.NonNull;
 
-import com.mizo0203.natureremoapisample.data.Appliance;
 import com.mizo0203.natureremoapisample.data.IRSignal;
-import com.mizo0203.natureremoapisample.data.Signal;
-import com.mizo0203.natureremoapisample.data.UserInformation;
 import com.mizo0203.natureremoapisample.util.AppExecutors;
 
 public class NatureRemoRepository {
 
     private static volatile NatureRemoRepository INSTANCE;
-
-    /**
-     * Cloud API クライアント
-     * <p>
-     * Cloud API: Nature Remo クラウドがインターネットに向けて提供する API
-     * http://swagger.nature.global/
-     */
-    private final NatureApiClient mCloudApiClient;
 
     /**
      * Local API クライアント
@@ -47,107 +36,24 @@ public class NatureRemoRepository {
     private AppExecutors mAppExecutors;
 
     // Prevent direct instantiation.
-    private NatureRemoRepository(@NonNull AppExecutors appExecutors, @NonNull NatureApiClient cloudApiClient, @NonNull NatureRemoLocalApiClient localApiClient) {
+    private NatureRemoRepository(@NonNull AppExecutors appExecutors, @NonNull NatureRemoLocalApiClient localApiClient) {
         mAppExecutors = appExecutors;
-        mCloudApiClient = cloudApiClient;
         mLocalApiClient = localApiClient;
     }
 
     /**
-     * @param cloudApiClient Cloud API クライアント
-     *                       Cloud API: Nature Remo クラウドがインターネットに向けて提供する API
      * @param localApiClient Local API クライアント
      *                       Local API: Nature Remo デバイスがローカルネットワークに提供するローカルの API
      */
-    public static NatureRemoRepository getInstance(@NonNull AppExecutors appExecutors, @NonNull NatureApiClient cloudApiClient, @NonNull NatureRemoLocalApiClient localApiClient) {
+    public static NatureRemoRepository getInstance(@NonNull AppExecutors appExecutors, @NonNull NatureRemoLocalApiClient localApiClient) {
         if (INSTANCE == null) {
             synchronized (NatureRemoRepository.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new NatureRemoRepository(appExecutors, cloudApiClient, localApiClient);
+                    INSTANCE = new NatureRemoRepository(appExecutors, localApiClient);
                 }
             }
         }
         return INSTANCE;
-    }
-
-    public void getUsersMe(@NonNull final Callback<UserInformation> callback) {
-        Runnable deleteRunnable = new Runnable() {
-            @Override
-            public void run() {
-                final UserInformation userInfo = mCloudApiClient.getUsersMe();
-                mAppExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (userInfo != null) {
-                            callback.success(userInfo);
-                        } else {
-                            callback.failure();
-                        }
-                    }
-                });
-            }
-        };
-
-        mAppExecutors.networkIO().execute(deleteRunnable);
-    }
-
-    public void getAppliances(@NonNull final Callback<Appliance[]> callback) {
-        Runnable deleteRunnable = new Runnable() {
-            @Override
-            public void run() {
-                final Appliance[] appliances = mCloudApiClient.getAppliances();
-                mAppExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (appliances != null) {
-                            callback.success(appliances);
-                        } else {
-                            callback.failure();
-                        }
-                    }
-                });
-            }
-        };
-
-        mAppExecutors.networkIO().execute(deleteRunnable);
-    }
-
-    public void getSignalsAppliance(@NonNull final String appliance, @NonNull final Callback<Signal[]> callback) {
-        Runnable deleteRunnable = new Runnable() {
-            @Override
-            public void run() {
-                final Signal[] appliances = mCloudApiClient.getSignalsAppliance(appliance);
-                mAppExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (appliances != null) {
-                            callback.success(appliances);
-                        } else {
-                            callback.failure();
-                        }
-                    }
-                });
-            }
-        };
-
-        mAppExecutors.networkIO().execute(deleteRunnable);
-    }
-
-    public void postSendSignal(@NonNull final String signal, @NonNull final Callback<Void> callback) {
-        Runnable deleteRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mCloudApiClient.postSendSignal(signal);
-                mAppExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        callback.success(null);
-                    }
-                });
-            }
-        };
-
-        mAppExecutors.networkIO().execute(deleteRunnable);
     }
 
     public void getMessages(@NonNull final Callback<IRSignal> callback) {
@@ -160,7 +66,7 @@ public class NatureRemoRepository {
                         mAppExecutors.mainThread().execute(new Runnable() {
                             @Override
                             public void run() {
-                            callback.success(message);
+                                callback.success(message);
                             }
                         });
                     }

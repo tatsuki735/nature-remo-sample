@@ -17,8 +17,6 @@
 package com.mizo0203.natureremoapisample;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -26,9 +24,6 @@ import android.widget.Toast;
 import com.mizo0203.natureremoapisample.panasonic.tv.RemoteControlButtonType;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
-    // TODO: (optional) Nature API を使用する場合は TOKEN をセット
-    private static final String TOKEN = "";
 
     // TODO: NATURE_REMO_IP_ADDRESS をセット
     private static final String NATURE_REMO_IP_ADDRESS = "192.168.1.23";
@@ -56,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.button_12).setOnClickListener(this);
 
         // Create the presenter
-        mPresenter = new MainPresenter(Injection.provideNatureRemoRepository(TOKEN, NATURE_REMO_IP_ADDRESS), this);
+        mPresenter = new MainPresenter(Injection.provideNatureRemoRepository(NATURE_REMO_IP_ADDRESS), this);
     }
 
     @Override
@@ -69,11 +64,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onPause() {
         super.onPause();
         mActive = false;
-    }
-
-    public void setPresenter(@NonNull MainPresenter presenter) {
-        checkNotNull(presenter, "presenter cannot be null");
-        mPresenter = presenter;
     }
 
     public void showSuccess() {
@@ -127,20 +117,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.button_12:
                 mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_12);
                 break;
-        }
-    }
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * @param reference    an object reference
-     * @param errorMessage the exception message to use if the check fails; will be converted to a
-     *                     string using {@link String#valueOf(Object)}
-     * @throws NullPointerException if {@code reference} is null
-     */
-    private void checkNotNull(Object reference, @Nullable String errorMessage) {
-        if (reference == null) {
-            throw new NullPointerException(errorMessage);
         }
     }
 }

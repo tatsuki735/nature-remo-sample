@@ -16,7 +16,6 @@
 
 package com.mizo0203.natureremoapisample;
 
-import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -41,10 +40,6 @@ public class MainPresenter {
         mNatureRemoRepository = natureRemoRepository;
         checkNotNull(mainView, "mainView cannot be null!");
         mMainView = mainView;
-        mMainView.setPresenter(this);
-
-        HandlerThread handlerThread = new HandlerThread("MainPresenter");
-        handlerThread.start();
     }
 
     public void sendButtonEvent(@NonNull IRSignal irSignalMessage) {

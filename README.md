@@ -8,3 +8,20 @@
     * 一部の API のみ実装済み、 UI からの呼び出しは未実装
 * [Nature Remo Local API](http://local.swagger.nature.global) v1.0.0
     * Panasonic 製テレビリモコンを例に実装済み
+
+## オープンソースライセンス / Open source licenses
+
+This software includes open source software:
+
+* [Retrofit](https://square.github.io/retrofit/) / [Apache License 2.0](https://square.github.io/retrofit/)  
+  Copyright 2013 [Square, Inc.](https://squareup.com/)
+* [Commons IO](http://commons.apache.org/proper/commons-io/) / [Apache License 2.0](http://www.apache.org/licenses/)  
+  Copyright © 2002-2017 [The Apache Software Foundation](https://www.apache.org/). All Rights Reserved.
+* [Guava: Google Core Libraries for Java](https://github.com/google/guava) / [Apache License 2.0](https://github.com/google/guava/blob/master/COPYING)  
+  [Google Open Source](https://opensource.google.com)
+* [JUnit 4](https://junit.org/junit4/) / [Eclipse Public License 1.0](https://junit.org/junit4/license.html)  
+  Copyright © 2002-2018 [JUnit](http://www.junit.org/). All Rights Reserved.
+
+## ライセンス / License
+
+Copyright 2018 [Satoki Mizoguchi](https://github.com/mizo0203), Licensed under the [Apache License, Version 2.0](LICENSE).

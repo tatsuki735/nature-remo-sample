@@ -50,6 +50,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.button_11).setOnClickListener(this);
         findViewById(R.id.button_12).setOnClickListener(this);
 
+        findViewById(R.id.button_ch_up).setOnClickListener(this);
+        findViewById(R.id.button_ch_down).setOnClickListener(this);
+
+        findViewById(R.id.button_vol_up).setOnClickListener(this);
+        findViewById(R.id.button_vol_down).setOnClickListener(this);
+
         // Create the presenter
         mPresenter = new MainPresenter(Injection.provideNatureRemoRepository(NATURE_REMO_IP_ADDRESS), this);
     }
@@ -116,6 +122,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button_12:
                 mPresenter.sendButtonEvent(RemoteControlButtonType.NUM_12);
+                break;
+            case R.id.button_ch_up:
+                mPresenter.sendButtonEvent(RemoteControlButtonType.CH_UP);
+                break;
+            case R.id.button_ch_down:
+                mPresenter.sendButtonEvent(RemoteControlButtonType.CH_DOWN);
+                break;
+            case R.id.button_vol_up:
+                mPresenter.sendButtonEvent(RemoteControlButtonType.VOL_UP);
+                break;
+            case R.id.button_vol_down:
+                mPresenter.sendButtonEvent(RemoteControlButtonType.VOL_DOWN);
                 break;
         }
     }

@@ -13,6 +13,14 @@
     <string name="button_11">11</string>
     <string name="button_12">12</string>
 
+    <string name="text_ch">CH</string>
+    <string name="button_ch_up">∧</string>
+    <string name="button_ch_down">∨</string>
+
+    <string name="text_vol">VOL</string>
+    <string name="button_vol_up">+</string>
+    <string name="button_vol_down">-</string>
+
     <string name="success">success</string>
     <string name="failure">failure</string>
 </resources>

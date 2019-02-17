@@ -17,6 +17,10 @@ This software includes open source software:
   Copyright 2013 [Square, Inc.](https://squareup.com/)
 * [JUnit 4](https://junit.org/junit4/) / [Eclipse Public License 1.0](https://junit.org/junit4/license.html)  
   Copyright © 2002-2018 [JUnit](http://www.junit.org/). All Rights Reserved.
+* [Android Support Library](https://developer.android.com/topic/libraries/support-library/) / [Apache License 2.0](https://developer.android.com/license)  
+  Copyright (c) 2005-2013, The [Android Open Source Project](https://source.android.com/)
+* [todo-mvp](https://github.com/googlesamples/android-architecture/tree/todo-mvp/) - [Android Architecture Blueprints](https://github.com/googlesamples/android-architecture) / [Apache License 2.0](https://github.com/googlesamples/android-architecture)  
+  Copyright 2019 [Google Inc.](https://www.google.com) All rights reserved.
 
 ## ライセンス / License
 

@@ -23,6 +23,9 @@ import android.widget.Toast;
 
 import com.mizo0203.natureremoapisample.panasonic.tv.RemoteControlButtonType;
 
+/**
+ * リモコンアプリのメイン画面 (UI)
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     // TODO: NATURE_REMO_IP_ADDRESS をセット
@@ -30,8 +33,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private MainPresenter mPresenter;
 
+    /**
+     * メイン画面が前面に表示されいるか
+     */
     private boolean mActive = false;
 
+    /**
+     * メイン画面が起動された直後に呼び出されます
+     * <p>
+     * ここで、画面に表示する＜1＞〜＜12＞ボタンなどの各種 View や
+     * ({@link MainPresenter}) を初期化します
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,30 +72,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPresenter = new MainPresenter(Injection.provideNatureRemoRepository(NATURE_REMO_IP_ADDRESS), this);
     }
 
+    /**
+     * メイン画面が前面に表示された直後に呼び出されます
+     */
     @Override
     public void onResume() {
         super.onResume();
         mActive = true;
     }
 
+    /**
+     * 別の画面を前面に表示する直前に呼び出されます
+     */
     @Override
     public void onPause() {
         super.onPause();
         mActive = false;
     }
 
+    /**
+     * 成功メッセージを表示します
+     */
     public void showSuccess() {
         Toast.makeText(getApplicationContext(), R.string.success, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * 失敗メッセージを表示します
+     */
     public void showFailure() {
         Toast.makeText(getApplicationContext(), R.string.failure, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * メイン画面が前面に表示されいるかを取得します
+     *
+     * @return メイン画面が前面に表示されていれば true 、そうでないなら false
+     */
     public boolean isActive() {
         return mActive;
     }
 
+    /**
+     * View がクリックされた直後に呼び出されます
+     *
+     * @param v クリックされた View
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

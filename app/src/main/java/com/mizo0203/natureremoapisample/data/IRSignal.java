@@ -1,5 +1,8 @@
 package com.mizo0203.natureremoapisample.data;
 
+/**
+ * IR 信号
+ */
 public class IRSignal {
 
     /**

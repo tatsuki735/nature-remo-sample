@@ -24,8 +24,8 @@ import com.mizo0203.natureremoapisample.data.IRSignal;
 import com.mizo0203.natureremoapisample.data.source.NatureRemoRepository;
 
 /**
- * Listens to user actions from the UI ({@link MainActivity}), retrieves the data and updates the
- * UI as required.
+ * メイン画面 ({@link MainActivity}) からユーザー操作を受けて、
+ * 必要に応じて Nature Remo との通信やメイン画面の更新をします
  */
 public class MainPresenter {
 
@@ -42,8 +42,16 @@ public class MainPresenter {
         mMainView = mainView;
     }
 
+    /**
+     * メイン画面でボタンがクリックされました
+     *
+     * @param irSignalMessage ボタンに対応する IR 信号
+     */
     public void sendButtonEvent(@NonNull IRSignal irSignalMessage) {
         mNatureRemoRepository.postMessages(irSignalMessage, new NatureRemoRepository.Callback<Void>() {
+            /**
+             * Nature Remo から IR 信号を送信することに成功した
+             */
             @Override
             public void success(Void signals) {
                 Log.d(TAG, "postMessages");
@@ -52,6 +60,9 @@ public class MainPresenter {
                 }
             }
 
+            /**
+             * Nature Remo から IR 信号を送信することに失敗した
+             */
             @Override
             public void failure() {
                 // The view may not be able to handle UI updates anymore
@@ -63,7 +74,7 @@ public class MainPresenter {
     }
 
     /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
+     * 呼び出し元メソッドにパラメーターとして渡されるオブジェクト参照がnullではないことを確認します
      *
      * @param reference    an object reference
      * @param errorMessage the exception message to use if the check fails; will be converted to a

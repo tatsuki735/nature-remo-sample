@@ -21,6 +21,9 @@ import android.support.annotation.NonNull;
 import com.mizo0203.natureremoapisample.data.IRSignal;
 import com.mizo0203.natureremoapisample.util.AppExecutors;
 
+/**
+ * ローカルネットワーク上の Nature Remo と通信します
+ */
 public class NatureRemoRepository {
 
     private static volatile NatureRemoRepository INSTANCE;
@@ -56,6 +59,9 @@ public class NatureRemoRepository {
         return INSTANCE;
     }
 
+    /**
+     * Nature Remo が受信した IR 信号を取得する
+     */
     public void getMessages(@NonNull final Callback<IRSignal> callback) {
         Runnable deleteRunnable = new Runnable() {
             @Override
@@ -87,6 +93,11 @@ public class NatureRemoRepository {
         mAppExecutors.networkIO().execute(deleteRunnable);
     }
 
+    /**
+     * Nature Remo から IR 信号を送信する
+     *
+     * @param message IR 信号
+     */
     public void postMessages(@NonNull final IRSignal message, @NonNull final Callback<Void> callback) {
         Runnable deleteRunnable = new Runnable() {
             @Override
@@ -120,8 +131,14 @@ public class NatureRemoRepository {
 
     public interface Callback<T> {
 
+        /**
+         * Nature Remo との通信に成功した
+         */
         void success(T responses);
 
+        /**
+         * Nature Remo との通信に失敗した
+         */
         void failure();
     }
 }

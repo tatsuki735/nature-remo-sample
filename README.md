@@ -4,8 +4,6 @@
 
 [Nature Remo API](https://developer.nature.global) を Android アプリで使用する非公式サンプルプロジェクトです。
 
-* [Nature API](http://swagger.nature.global) v1.0.0
-    * 一部の API のみ実装済み、 UI からの呼び出しは未実装
 * [Nature Remo Local API](http://local.swagger.nature.global) v1.0.0
     * Panasonic 製テレビリモコンを例に実装済み
 

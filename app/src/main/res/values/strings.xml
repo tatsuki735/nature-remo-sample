@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2015 The Android Open Source Project
+  ~ Copyright (C) 2019 Satoki Mizoguchi
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
   -->
 
 <resources>
-    <string name="app_name">TO-DO-MVP</string>
+    <string name="app_name">Nature Remo API Sample</string>
     <string name="add_task">New TO-DO</string>
     <string name="edit_task">Edit TO-DO</string>
     <string name="task_marked_complete">Task marked complete</string>
@@ -56,4 +56,27 @@
     <string name="no_tasks_add">Add a TO-DO item +</string>
     <string name="refresh">Refresh</string>
 
+    <string name="button_1">1</string>
+    <string name="button_2">2</string>
+    <string name="button_3">3</string>
+    <string name="button_4">4</string>
+    <string name="button_5">5</string>
+    <string name="button_6">6</string>
+    <string name="button_7">7</string>
+    <string name="button_8">8</string>
+    <string name="button_9">9</string>
+    <string name="button_10">10</string>
+    <string name="button_11">11</string>
+    <string name="button_12">12</string>
+
+    <string name="text_ch">CH</string>
+    <string name="button_ch_up">∧</string>
+    <string name="button_ch_down">∨</string>
+
+    <string name="text_vol">VOL</string>
+    <string name="button_vol_up">+</string>
+    <string name="button_vol_down">-</string>
+
+    <string name="success">success</string>
+    <string name="failure">failure</string>
 </resources>

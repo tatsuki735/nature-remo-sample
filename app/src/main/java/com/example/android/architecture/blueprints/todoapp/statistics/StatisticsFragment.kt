@@ -21,7 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.example.android.architecture.blueprints.todoapp.R
+import com.mizo0203.natureremoapisample.R
 
 /**
  * Main UI for the statistics screen.

@@ -18,6 +18,8 @@ package com.example.android.architecture.blueprints.todoapp.addedittask
 
 import android.content.Intent
 import android.content.res.Resources
+import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.clearText
@@ -30,14 +32,12 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import androidx.appcompat.widget.Toolbar
-import android.view.View
-import com.example.android.architecture.blueprints.todoapp.R
-import com.example.android.architecture.blueprints.todoapp.R.id.toolbar
 import com.example.android.architecture.blueprints.todoapp.TestUtils
 import com.example.android.architecture.blueprints.todoapp.data.FakeTasksRemoteDataSource
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository
+import com.mizo0203.natureremoapisample.R
+import com.mizo0203.natureremoapisample.R.id.toolbar
 import org.hamcrest.Description
 import org.junit.Rule
 import org.junit.Test

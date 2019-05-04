@@ -18,9 +18,9 @@ package com.example.android.architecture.blueprints.todoapp.taskdetail
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.android.architecture.blueprints.todoapp.Injection
-import com.example.android.architecture.blueprints.todoapp.R
 import com.example.android.architecture.blueprints.todoapp.util.replaceFragmentInActivity
 import com.example.android.architecture.blueprints.todoapp.util.setupActionBar
+import com.mizo0203.natureremoapisample.R
 
 /**
  * Displays task details screen.

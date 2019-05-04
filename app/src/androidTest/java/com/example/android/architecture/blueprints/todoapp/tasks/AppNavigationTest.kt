@@ -15,6 +15,8 @@
  */
 package com.example.android.architecture.blueprints.todoapp.tasks
 
+import android.view.Gravity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.NoActivityResumedException
@@ -23,17 +25,13 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions.open
 import androidx.test.espresso.contrib.DrawerMatchers.isClosed
 import androidx.test.espresso.contrib.DrawerMatchers.isOpen
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import androidx.drawerlayout.widget.DrawerLayout
-import android.view.Gravity
-import com.example.android.architecture.blueprints.todoapp.R
 import com.example.android.architecture.blueprints.todoapp.TestUtils.getToolbarNavigationContentDescription
 import com.example.android.architecture.blueprints.todoapp.custom.action.NavigationViewActions.navigateTo
+import com.mizo0203.natureremoapisample.R
 import junit.framework.Assert.fail
 import org.junit.Rule
 import org.junit.Test

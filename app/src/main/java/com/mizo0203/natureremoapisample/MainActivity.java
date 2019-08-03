@@ -29,7 +29,7 @@ import com.mizo0203.natureremoapisample.panasonic.tv.RemoteControlButtonType;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     // TODO: NATURE_REMO_IP_ADDRESS をセット
-    private static final String NATURE_REMO_IP_ADDRESS = "192.168.1.23";
+    private static final String NATURE_REMO_IP_ADDRESS = "192.168.2.2";
 
     private MainPresenter mPresenter;
 
@@ -171,4 +171,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    public void onClickRecordButton(View view) {
+        mPresenter.record();
+    }
+
 }

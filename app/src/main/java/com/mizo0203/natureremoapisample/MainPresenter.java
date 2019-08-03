@@ -35,6 +35,8 @@ public class MainPresenter {
 
     private final MainActivity mMainView;
 
+    private IRSignal mSignalRecord;
+
     public MainPresenter(@NonNull NatureRemoRepository natureRemoRepository, @NonNull MainActivity mainView) {
         checkNotNull(natureRemoRepository, "natureRemoRepository cannot be null");
         mNatureRemoRepository = natureRemoRepository;
@@ -68,6 +70,35 @@ public class MainPresenter {
                 // The view may not be able to handle UI updates anymore
                 if (mMainView.isActive()) {
                     mMainView.showFailure();
+                }
+            }
+        });
+    }
+
+    public void record() {
+        mNatureRemoRepository.getMessages(new NatureRemoRepository.Callback<IRSignal>() {
+            /**
+             * Nature Remo から IR 信号を受信することに成功した
+             */
+            @Override
+            public void success(IRSignal signals) {
+                Log.d(TAG, "getMessages");
+                mSignalRecord = signals;
+                sendButtonEvent(mSignalRecord);
+            }
+
+            /**
+             * Nature Remo から IR 信号を受信することに失敗した
+             */
+            @Override
+            public void failure() {
+                // The view may not be able to handle UI updates anymore
+                if (mMainView.isActive()) {
+                    if (mSignalRecord != null) {
+                        sendButtonEvent(mSignalRecord);
+                    } else {
+                        mMainView.showFailure();
+                    }
                 }
             }
         });
